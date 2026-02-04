@@ -178,7 +178,10 @@ app.get('/', (req, res) => {
   });
 });
 
-app.listen(PORT, () => {
+let server;
+
+if (require.main === module) {
+server = app.listen(PORT, () => {
   console.log(`
 ╔═══════════════════════════════════════════════════════════╗
 ║  📅 Public Holidays API with x402                       ║
@@ -191,3 +194,6 @@ app.listen(PORT, () => {
 ╚═══════════════════════════════════════════════════════════╝
   `);
 });
+}
+
+module.exports = app;
