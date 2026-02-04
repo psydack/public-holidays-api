@@ -1,0 +1,25 @@
+{
+  "name": "public-holidays-api",
+  "version": "1.0.0",
+  "description": "Public holidays and business days API with x402 payments",
+  "main": "index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "jest --coverage"
+  },
+  "keywords": ["holidays", "business-days", "calendar", "x402"],
+  "author": "psydack",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "supertest": "^6.3.4"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "testMatch": ["**/__tests__/**/*.test.js"]
+  }
+}
