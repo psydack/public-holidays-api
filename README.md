@@ -9,7 +9,7 @@ Public holidays and business days API for multiple countries with x402 micropaym
 - ✅ **Next Business Day** - Find the next business day
 - ✅ **Count Business Days** - Count business days between dates
 - ✅ **3 Countries** - Brazil (BR), United States (US), United Kingdom (UK)
-- ✅ **x402 Payments** - $0.0005 USDC per request
+- ✅ **x402 Payments** - $0.00025 USDC per request
 - ✅ **Easily Expandable** - Simple structure to add more countries
 
 ## 📋 Endpoints
@@ -73,7 +73,7 @@ Content-Type: application/json
 
 ## 💰 Payments
 
-- **Price**: $0.0005 USDC per request
+- **Price**: $0.00025 USDC per request
 - **Network**: Base (Chain ID 8453)
 - **Protocol**: x402 v2
 

@@ -22,7 +22,7 @@ const requirePayment = (req, res, next) => {
     accepts: [{
       scheme: 'exact',
       network: 'eip155:8453',
-      amount: '500',
+      amount: '250',
       payTo: WALLET_ADDRESS,
       asset: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913'
     }]
@@ -32,7 +32,7 @@ const requirePayment = (req, res, next) => {
   res.setHeader('PAYMENT-REQUIRED', Buffer.from(JSON.stringify(paymentRequirements)).toString('base64'));
   res.json({
     message: 'Payment required',
-    price: '$0.0005 USDC',
+    price: '$0.00025 USDC',
     network: 'Base',
     x402Version: 2,
     accepts: paymentRequirements.accepts
@@ -172,7 +172,7 @@ app.get('/', (req, res) => {
     },
     supported_countries: getSupportedCountries(),
     payment: {
-      price: '$0.0005 USDC',
+      price: '$0.00025 USDC',
       network: 'Base'
     }
   });
@@ -188,7 +188,7 @@ server = app.listen(PORT, () => {
 ╠═══════════════════════════════════════════════════════════╣
 ║  ✅ Server running on: http://localhost:${PORT}               ║
 ║  💰 Wallet: ${WALLET_ADDRESS}       ║
-║  💳 Payment: $0.0005 USDC per request                    ║
+║  💳 Payment: $0.00025 USDC per request                    ║
 ║                                                          ║
 ║  Supported countries: ${getSupportedCountries().length}                         ║
 ╚═══════════════════════════════════════════════════════════╝
