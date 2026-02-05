@@ -7,10 +7,18 @@
     "start": "node src/index.js",
     "test": "jest --coverage"
   },
-  "keywords": ["holidays", "business-days", "calendar", "x402"],
+  "keywords": [
+    "holidays",
+    "business-days",
+    "calendar",
+    "x402"
+  ],
   "author": "psydack",
   "license": "ISC",
   "dependencies": {
+    "@x402/core": "^2.2.0",
+    "@x402/evm": "^2.2.0",
+    "@x402/express": "^2.2.0",
     "dotenv": "^17.2.3",
     "express": "^5.2.1"
   },
@@ -20,6 +28,8 @@
   },
   "jest": {
     "testEnvironment": "node",
-    "testMatch": ["**/__tests__/**/*.test.js"]
+    "testMatch": [
+      "**/__tests__/**/*.test.js"
+    ]
   }
 }

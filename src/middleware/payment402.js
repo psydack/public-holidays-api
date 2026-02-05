@@ -1,22 +1,43 @@
 /**
- * x402 Payment middleware
+ * x402 Payment middleware using official server implementation
  */
-const USDC_CONTRACT_BASE = '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913';
-const PRICE_ATOMIC = '250';
+const { paymentMiddleware } = require('@x402/express');
+const { x402ResourceServer, HTTPFacilitatorClient } = require('@x402/core/server');
+const { registerExactEvmScheme } = require('@x402/evm/exact/server');
 
-function requirePayment(walletAddress) {
-  return (req, res, next) => {
-    if (req.headers['x-payment']) return next();
+const FACILITATOR_URL = process.env.FACILITATOR_URL || 'https://x402.org/facilitator';
+const NETWORK = process.env.NETWORK || 'eip155:84532';
+const PRICE = '$0.00025';
 
-    const paymentRequirements = {
-      x402Version: 2,
-      accepts: [{ scheme: 'exact', network: 'eip155:8453', amount: PRICE_ATOMIC, payTo: walletAddress, asset: USDC_CONTRACT_BASE }]
-    };
+function createX402Middleware(walletAddress) {
+  const facilitatorClient = new HTTPFacilitatorClient({ url: FACILITATOR_URL });
+  const x402Server = new x402ResourceServer(facilitatorClient);
+  registerExactEvmScheme(x402Server);
 
-    res.status(402);
-    res.setHeader('PAYMENT-REQUIRED', Buffer.from(JSON.stringify(paymentRequirements)).toString('base64'));
-    res.json({ message: 'Payment required', price: '$0.00025 USDC', network: 'Base' });
+  const x402Routes = {
+    'POST /holidays': {
+      accepts: [{ scheme: 'exact', price: PRICE, network: NETWORK, payTo: walletAddress }],
+      description: 'Get public holidays for a country and year',
+      mimeType: 'application/json'
+    },
+    'POST /is-business-day': {
+      accepts: [{ scheme: 'exact', price: PRICE, network: NETWORK, payTo: walletAddress }],
+      description: 'Check if a date is a business day',
+      mimeType: 'application/json'
+    },
+    'POST /next-business-day': {
+      accepts: [{ scheme: 'exact', price: PRICE, network: NETWORK, payTo: walletAddress }],
+      description: 'Get the next business day',
+      mimeType: 'application/json'
+    },
+    'POST /count-business-days': {
+      accepts: [{ scheme: 'exact', price: PRICE, network: NETWORK, payTo: walletAddress }],
+      description: 'Count business days between dates',
+      mimeType: 'application/json'
+    }
   };
+
+  return paymentMiddleware(x402Routes, x402Server);
 }
 
-module.exports = { requirePayment };
+module.exports = { createX402Middleware };

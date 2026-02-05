@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const { getHolidays, isBusinessDay, getNextBusinessDay, countBusinessDays, getSupportedCountries } = require('./holidays');
+const { createX402Middleware } = require('./middleware/payment402');
 
 const app = express();
 app.use(express.json());
@@ -13,37 +14,13 @@ if (!WALLET_ADDRESS) {
   process.exit(1);
 }
 
-// x402 Payment middleware
-const requirePayment = (req, res, next) => {
-  if (req.headers['x-payment']) return next();
-
-  const paymentRequirements = {
-    x402Version: 2,
-    accepts: [{
-      scheme: 'exact',
-      network: 'eip155:8453',
-      amount: '250',
-      payTo: WALLET_ADDRESS,
-      asset: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913'
-    }]
-  };
-
-  res.status(402);
-  res.setHeader('PAYMENT-REQUIRED', Buffer.from(JSON.stringify(paymentRequirements)).toString('base64'));
-  res.json({
-    message: 'Payment required',
-    price: '$0.00025 USDC',
-    network: 'Base',
-    x402Version: 2,
-    accepts: paymentRequirements.accepts
-  });
-};
+app.use(createX402Middleware(WALLET_ADDRESS));
 
 /**
  * GET /holidays
  * Get holidays for a country and year
  */
-app.get('/holidays', requirePayment, (req, res) => {
+app.get('/holidays', (req, res) => {
   const { country, year } = req.query;
 
   if (!country) {
@@ -58,7 +35,7 @@ app.get('/holidays', requirePayment, (req, res) => {
  * POST /holidays
  * Get holidays with POST (for Clawmart submission)
  */
-app.post('/holidays', requirePayment, (req, res) => {
+app.post('/holidays', (req, res) => {
   const { country, year } = req.body;
 
   if (!country) {
@@ -73,7 +50,7 @@ app.post('/holidays', requirePayment, (req, res) => {
  * GET /is-business-day
  * Check if a date is a business day
  */
-app.get('/is-business-day', requirePayment, (req, res) => {
+app.get('/is-business-day', (req, res) => {
   const { date, country } = req.query;
 
   if (!date || !country) {
@@ -87,7 +64,7 @@ app.get('/is-business-day', requirePayment, (req, res) => {
 /**
  * POST /is-business-day
  */
-app.post('/is-business-day', requirePayment, (req, res) => {
+app.post('/is-business-day', (req, res) => {
   const { date, country } = req.body;
 
   if (!date || !country) {
@@ -102,7 +79,7 @@ app.post('/is-business-day', requirePayment, (req, res) => {
  * GET /next-business-day
  * Get next business day
  */
-app.get('/next-business-day', requirePayment, (req, res) => {
+app.get('/next-business-day', (req, res) => {
   const { date, country } = req.query;
 
   if (!date || !country) {
@@ -116,7 +93,7 @@ app.get('/next-business-day', requirePayment, (req, res) => {
 /**
  * POST /next-business-day
  */
-app.post('/next-business-day', requirePayment, (req, res) => {
+app.post('/next-business-day', (req, res) => {
   const { date, country } = req.body;
 
   if (!date || !country) {
@@ -131,7 +108,7 @@ app.post('/next-business-day', requirePayment, (req, res) => {
  * GET /count-business-days
  * Count business days between dates
  */
-app.get('/count-business-days', requirePayment, (req, res) => {
+app.get('/count-business-days', (req, res) => {
   const { start_date, end_date, country } = req.query;
 
   if (!start_date || !end_date || !country) {
@@ -145,7 +122,7 @@ app.get('/count-business-days', requirePayment, (req, res) => {
 /**
  * POST /count-business-days
  */
-app.post('/count-business-days', requirePayment, (req, res) => {
+app.post('/count-business-days', (req, res) => {
   const { start_date, end_date, country } = req.body;
 
   if (!start_date || !end_date || !country) {
