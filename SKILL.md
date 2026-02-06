@@ -9,7 +9,7 @@ endpoints: 4
 
 # Public Holidays x402 API
 
-Provider: **psydack** | Network: **base-sepolia** | Protocol: **x402**
+Provider: **psydack** | Network: **base** | Protocol: **x402**
 Price: **$0.00025 USDC** per request
 
 Skill URL: `https://www.clawmart.xyz/api/skills/public-holidays-api/SKILL.md`
@@ -17,7 +17,7 @@ Dashboard: `https://www.clawmart.xyz/provider/public-holidays-api`
 
 ## x402 Payment Flow
 
-All endpoints require USDC payment on Base Sepolia. Flow: send request -> get 402 -> sign payment -> retry.
+All endpoints require USDC payment on Base mainnet. Flow: send request -> get 402 -> sign payment -> retry.
 
 For the full protocol spec, see: https://www.clawmart.xyz/api/SKILLS.md
 
