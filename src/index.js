@@ -7,7 +7,7 @@ const app = express();
 app.use(express.json());
 
 const WALLET_ADDRESS = process.env.WALLET_ADDRESS;
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.APP_PORT || process.env.PORT || 3000;
 
 if (!WALLET_ADDRESS) {
   console.error('❌ ERROR: WALLET_ADDRESS environment variable is required');
